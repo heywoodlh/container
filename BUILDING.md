@@ -20,6 +20,23 @@ Copy the binaries to `/usr/local/bin` and `/usr/local/libexec` (requires enterin
 make install
 ```
 
+### Linux compilation
+
+To compile the Linux executable, install a Static Linux SDK as described in the Swift documentation: [Install Swift](https://www.swift.org/install/linux/)
+
+To ensure consistency between Swift and a Linux Static SDK, [swiftly](https://www.swift.org/install/macos/swiftly/) is ideal. The following commands demonstrate how to install the minimum required Swift version with Swiftly and the corresponding SDK at the time of writing:
+
+```
+swiftly install 6.2-snapshot
+swift sdk install https://download.swift.org/swift-6.2-branch/static-sdk/swift-6.2-DEVELOPMENT-SNAPSHOT-2025-06-17-a/swift-6.2-DEVELOPMENT-SNAPSHOT-2025-06-17-a_static-linux-0.0.1.artifactbundle.tar.gz --checksum bb1fbeeb07b1b8d024d6d17d14500d0750bff4064e9fd077497bf0efcc454eb1
+```
+
+Then run the following:
+
+```bash
+make linux
+```
+
 ## Compile protobufs
 
 `container` uses gRPC to communicate to the builder virtual machine that creates images from `Dockerfile`s, and depends on specific versions of `grpc-swift` and `swift-protobuf`. If you make changes to the gRPC APIs in the [container-builder-shim](https://github.com/apple/container-builder-shim) project, install the tools and re-generate the gRPC code in this project using:

@@ -22,6 +22,7 @@ test_results/
 *.ext4
 *.pkg
 *.swp
+debug/**
 
 # API docs for local preview only.
 _site/

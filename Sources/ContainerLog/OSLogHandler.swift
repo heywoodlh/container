@@ -18,12 +18,11 @@
 
 import Foundation
 import Logging
-import os
 
 import struct Logging.Logger
 
 public struct OSLogHandler: LogHandler {
-    private let logger: os.Logger
+    private let logger: Logger
 
     public var logLevel: Logger.Level = .info
     private var formattedMetadata: String?
@@ -44,7 +43,8 @@ public struct OSLogHandler: LogHandler {
     }
 
     public init(label: String, category: String) {
-        self.logger = os.Logger(subsystem: label, category: category)
+        //self.logger = Logger(subsystem: label, category: category)
+        self.logger = Logger(label: label)
     }
 }
 
@@ -73,8 +73,8 @@ extension OSLogHandler {
         }
 
         self.logger.log(
-            level: level.toOSLogLevel(),
-            "\(finalMessage, privacy: .public)"
+            level: level,
+            "\(finalMessage)"
         )
     }
 
@@ -85,22 +85,5 @@ extension OSLogHandler {
         return metadata.map {
             "[\($0)=\($1)]"
         }.joined(separator: " ")
-    }
-}
-
-extension Logger.Level {
-    func toOSLogLevel() -> OSLogType {
-        switch self {
-        case .debug, .trace:
-            return .debug
-        case .info:
-            return .info
-        case .notice:
-            return .default
-        case .error, .warning:
-            return .error
-        case .critical:
-            return .fault
-        }
     }
 }

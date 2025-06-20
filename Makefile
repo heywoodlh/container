@@ -19,6 +19,7 @@ export GIT_COMMIT := $(shell git rev-parse HEAD)
 
 # Commonly used locations
 SWIFT := "/usr/bin/swift"
+PATH_SWIFT := $(shell command -v swift 2>/dev/null || echo "/usr/bin/swift")
 DESTDIR ?= /usr/local/
 ROOT_DIR := $(shell git rev-parse --show-toplevel)
 BUILD_BIN_DIR = $(shell $(SWIFT) build -c $(BUILD_CONFIGURATION) --show-bin-path)
@@ -56,6 +57,12 @@ build:
 container: build 
 	@# Install binaries under project directory
 	@"$(MAKE)" BUILD_CONFIGURATION=$(BUILD_CONFIGURATION) DESTDIR=$(ROOT_DIR)/ SUDO= install
+
+.PHONY: linux
+linux:
+	@echo Building container binaries...
+	$(PATH_SWIFT) build -c $(BUILD_CONFIGURATION) $(CURRENT_SDK_ARGS) --target container --swift-sdk x86_64-swift-linux-musl --build-path ./debug/linux-x86_64; \
+	$(PATH_SWIFT) build -c $(BUILD_CONFIGURATION) $(CURRENT_SDK_ARGS) --target container --swift-sdk aarch64-swift-linux-musl --build-path ./debug/linux-aarch64; \
 
 .PHONY: release
 release: BUILD_CONFIGURATION = release
